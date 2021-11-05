@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.renhuas.datainform.mapper.DataInformMapper">
+    
+    <resultMap type="DataInform" id="DataInformResult">
+        <result property="inforId"    column="infor_id"    />
+        <result property="inforName"    column="infor_name"    />
+        <result property="schSemester"    column="sch_semester"    />
+        <result property="academic"    column="academic"    />
+        <result property="inforType"    column="infor_type"    />
+        <result property="uploadTime"    column="upload_time"    />
+        <result property="userId"    column="user_id"    />
+        <result property="username"    column="username"    />
+        <result property="uploadState"    column="upload_state"    />
+        <result property="lockState"    column="lock_state"    />
+    </resultMap>
+
+    <sql id="selectDataInformVo">
+        select infor_id, infor_name, sch_semester, academic, infor_type, upload_time, user_id, username, upload_state, lock_state from data_inform
+    </sql>
+
+    <select id="selectDataInformList" parameterType="DataInform" resultMap="DataInformResult">
+        <include refid="selectDataInformVo"/>
+        <where>  
+            <if test="inforName != null  and inforName != ''"> and infor_name like concat('%', #{inforName}, '%')</if>
+            <if test="schSemester != null  and schSemester != ''"> and sch_semester = #{schSemester}</if>
+            <if test="academic != null  and academic != ''"> and academic = #{academic}</if>
+            <if test="inforType != null  and inforType != ''"> and infor_type = #{inforType}</if>
+            <if test="uploadTime != null "> and upload_time = #{uploadTime}</if>
+            <if test="uploadState != null  and uploadState != ''"> and upload_state = #{uploadState}</if>
+            <if test="lockState != null  and lockState != ''"> and lock_state = #{lockState}</if>
+        </where>
+    </select>
+    
+    <select id="selectDataInformByInforId" parameterType="Long" resultMap="DataInformResult">
+        <include refid="selectDataInformVo"/>
+        where infor_id = #{inforId}
+    </select>
+        
+    <insert id="insertDataInform" parameterType="DataInform" useGeneratedKeys="true" keyProperty="inforId">
+        insert into data_inform
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="inforName != null and inforName != ''">infor_name,</if>
+            <if test="schSemester != null and schSemester != ''">sch_semester,</if>
+            <if test="academic != null and academic != ''">academic,</if>
+            <if test="inforType != null and inforType != ''">infor_type,</if>
+            <if test="uploadTime != null">upload_time,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="username != null">username,</if>
+            <if test="uploadState != null and uploadState != ''">upload_state,</if>
+            <if test="lockState != null and lockState != ''">lock_state,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="inforName != null and inforName != ''">#{inforName},</if>
+            <if test="schSemester != null and schSemester != ''">#{schSemester},</if>
+            <if test="academic != null and academic != ''">#{academic},</if>
+            <if test="inforType != null and inforType != ''">#{inforType},</if>
+            <if test="uploadTime != null">#{uploadTime},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="username != null">#{username},</if>
+            <if test="uploadState != null and uploadState != ''">#{uploadState},</if>
+            <if test="lockState != null and lockState != ''">#{lockState},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDataInform" parameterType="DataInform">
+        update data_inform
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="inforName != null and inforName != ''">infor_name = #{inforName},</if>
+            <if test="schSemester != null and schSemester != ''">sch_semester = #{schSemester},</if>
+            <if test="academic != null and academic != ''">academic = #{academic},</if>
+            <if test="inforType != null and inforType != ''">infor_type = #{inforType},</if>
+            <if test="uploadTime != null">upload_time = #{uploadTime},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="username != null">username = #{username},</if>
+            <if test="uploadState != null and uploadState != ''">upload_state = #{uploadState},</if>
+            <if test="lockState != null and lockState != ''">lock_state = #{lockState},</if>
+        </trim>
+        where infor_id = #{inforId}
+    </update>
+
+    <delete id="deleteDataInformByInforId" parameterType="Long">
+        delete from data_inform where infor_id = #{inforId}
+    </delete>
+
+    <delete id="deleteDataInformByInforIds" parameterType="String">
+        delete from data_inform where infor_id in 
+        <foreach item="inforId" collection="array" open="(" separator="," close=")">
+            #{inforId}
+        </foreach>
+    </delete>
+</mapper>

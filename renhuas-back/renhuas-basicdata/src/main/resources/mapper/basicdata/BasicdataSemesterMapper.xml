@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.renhuas.basicdata.mapper.BasicdataSemesterMapper">
+    
+    <resultMap type="BasicdataSemester" id="BasicdataSemesterResult">
+        <result property="semesterId"    column="semester_id"    />
+        <result property="semester"    column="semester"    />
+        <result property="studyWeek"    column="study_week"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectBasicdataSemesterVo">
+        select semester_id, semester, study_week, remark from basicdata_semester
+    </sql>
+
+    <select id="selectBasicdataSemesterList" parameterType="BasicdataSemester" resultMap="BasicdataSemesterResult">
+        <include refid="selectBasicdataSemesterVo"/>
+        <where>  
+            <if test="semester != null  and semester != ''"> and semester = #{semester}</if>
+            <if test="studyWeek != null  and studyWeek != ''"> and study_week = #{studyWeek}</if>
+        </where>
+    </select>
+    
+    <select id="selectBasicdataSemesterBySemesterId" parameterType="Long" resultMap="BasicdataSemesterResult">
+        <include refid="selectBasicdataSemesterVo"/>
+        where semester_id = #{semesterId}
+    </select>
+        
+    <insert id="insertBasicdataSemester" parameterType="BasicdataSemester" useGeneratedKeys="true" keyProperty="semesterId">
+        insert into basicdata_semester
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="semester != null and semester != ''">semester,</if>
+            <if test="studyWeek != null and studyWeek != ''">study_week,</if>
+            <if test="remark != null and remark != ''">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="semester != null and semester != ''">#{semester},</if>
+            <if test="studyWeek != null and studyWeek != ''">#{studyWeek},</if>
+            <if test="remark != null and remark != ''">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBasicdataSemester" parameterType="BasicdataSemester">
+        update basicdata_semester
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="semester != null and semester != ''">semester = #{semester},</if>
+            <if test="studyWeek != null and studyWeek != ''">study_week = #{studyWeek},</if>
+            <if test="remark != null and remark != ''">remark = #{remark},</if>
+        </trim>
+        where semester_id = #{semesterId}
+    </update>
+
+    <delete id="deleteBasicdataSemesterBySemesterId" parameterType="Long">
+        delete from basicdata_semester where semester_id = #{semesterId}
+    </delete>
+
+    <delete id="deleteBasicdataSemesterBySemesterIds" parameterType="String">
+        delete from basicdata_semester where semester_id in 
+        <foreach item="semesterId" collection="array" open="(" separator="," close=")">
+            #{semesterId}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.renhuas.evaluation.mapper.EvalEduQualityMapper">
+    
+    <resultMap type="EvalEduQuality" id="EvalEduQualityResult">
+        <result property="techQualityId"    column="tech_quality_id"    />
+        <result property="techQualityName"    column="tech_quality_name"    />
+        <result property="academic"    column="academic"    />
+        <result property="schSemester"    column="sch_semester"    />
+        <result property="evalObjective"    column="eval_objective"    />
+        <result property="evalSubjective"    column="eval_subjective"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="userId"    column="user_id"    />
+        <result property="username"    column="username"    />
+    </resultMap>
+
+    <sql id="selectEvalEduQualityVo">
+        select tech_quality_id, tech_quality_name, academic, sch_semester, eval_objective, eval_subjective, create_time, user_id, username from eval_edu_quality
+    </sql>
+
+    <select id="selectEvalEduQualityList" parameterType="EvalEduQuality" resultMap="EvalEduQualityResult">
+        <include refid="selectEvalEduQualityVo"/>
+        <where>  
+            <if test="techQualityName != null  and techQualityName != ''"> and tech_quality_name like concat('%', #{techQualityName}, '%')</if>
+            <if test="academic != null  and academic != ''"> and academic = #{academic}</if>
+            <if test="schSemester != null  and schSemester != ''"> and sch_semester = #{schSemester}</if>
+            <if test="evalObjective != null  and evalObjective != ''"> and eval_objective = #{evalObjective}</if>
+            <if test="evalSubjective != null  and evalSubjective != ''"> and eval_subjective = #{evalSubjective}</if>
+            <if test="createTime != null "> and create_time = #{createTime}</if>
+            <if test="username != null  and username != ''"> and username like concat('%', #{username}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectEvalEduQualityByTechQualityId" parameterType="Long" resultMap="EvalEduQualityResult">
+        <include refid="selectEvalEduQualityVo"/>
+        where tech_quality_id = #{techQualityId}
+    </select>
+        
+    <insert id="insertEvalEduQuality" parameterType="EvalEduQuality" useGeneratedKeys="true" keyProperty="techQualityId">
+        insert into eval_edu_quality
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="techQualityName != null and techQualityName != ''">tech_quality_name,</if>
+            <if test="academic != null and academic != ''">academic,</if>
+            <if test="schSemester != null and schSemester != ''">sch_semester,</if>
+            <if test="evalObjective != null and evalObjective != ''">eval_objective,</if>
+            <if test="evalSubjective != null and evalSubjective != ''">eval_subjective,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="username != null and username != ''">username,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="techQualityName != null and techQualityName != ''">#{techQualityName},</if>
+            <if test="academic != null and academic != ''">#{academic},</if>
+            <if test="schSemester != null and schSemester != ''">#{schSemester},</if>
+            <if test="evalObjective != null and evalObjective != ''">#{evalObjective},</if>
+            <if test="evalSubjective != null and evalSubjective != ''">#{evalSubjective},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="username != null and username != ''">#{username},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEvalEduQuality" parameterType="EvalEduQuality">
+        update eval_edu_quality
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="techQualityName != null and techQualityName != ''">tech_quality_name = #{techQualityName},</if>
+            <if test="academic != null and academic != ''">academic = #{academic},</if>
+            <if test="schSemester != null and schSemester != ''">sch_semester = #{schSemester},</if>
+            <if test="evalObjective != null and evalObjective != ''">eval_objective = #{evalObjective},</if>
+            <if test="evalSubjective != null and evalSubjective != ''">eval_subjective = #{evalSubjective},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="username != null and username != ''">username = #{username},</if>
+        </trim>
+        where tech_quality_id = #{techQualityId}
+    </update>
+
+    <delete id="deleteEvalEduQualityByTechQualityId" parameterType="Long">
+        delete from eval_edu_quality where tech_quality_id = #{techQualityId}
+    </delete>
+
+    <delete id="deleteEvalEduQualityByTechQualityIds" parameterType="String">
+        delete from eval_edu_quality where tech_quality_id in 
+        <foreach item="techQualityId" collection="array" open="(" separator="," close=")">
+            #{techQualityId}
+        </foreach>
+    </delete>
+</mapper>

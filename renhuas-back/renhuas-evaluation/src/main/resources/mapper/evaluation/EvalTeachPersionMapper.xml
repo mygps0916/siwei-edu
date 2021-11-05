@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.renhuas.evaluation.mapper.EvalTeachPersionMapper">
+    
+    <resultMap type="EvalTeachPersion" id="EvalTeachPersionResult">
+        <result property="evalId"    column="eval_id"    />
+        <result property="evalPersionName"    column="eval_persion_name"    />
+        <result property="academic"    column="academic"    />
+        <result property="schSemester"    column="sch_semester"    />
+        <result property="evalObjective"    column="eval_objective"    />
+        <result property="evalSubjective"    column="eval_subjective"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="userId"    column="user_id"    />
+        <result property="username"    column="username"    />
+    </resultMap>
+
+    <sql id="selectEvalTeachPersionVo">
+        select eval_id, eval_persion_name, academic, sch_semester, eval_objective, eval_subjective, create_time, user_id, username from eval_teach_persion
+    </sql>
+
+    <select id="selectEvalTeachPersionList" parameterType="EvalTeachPersion" resultMap="EvalTeachPersionResult">
+        <include refid="selectEvalTeachPersionVo"/>
+        <where>  
+            <if test="evalPersionName != null  and evalPersionName != ''"> and eval_persion_name like concat('%', #{evalPersionName}, '%')</if>
+            <if test="academic != null  and academic != ''"> and academic = #{academic}</if>
+            <if test="schSemester != null  and schSemester != ''"> and sch_semester = #{schSemester}</if>
+            <if test="evalObjective != null  and evalObjective != ''"> and eval_objective = #{evalObjective}</if>
+            <if test="evalSubjective != null  and evalSubjective != ''"> and eval_subjective = #{evalSubjective}</if>
+            <if test="createTime != null "> and create_time = #{createTime}</if>
+            <if test="username != null  and username != ''"> and username like concat('%', #{username}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectEvalTeachPersionByEvalId" parameterType="Long" resultMap="EvalTeachPersionResult">
+        <include refid="selectEvalTeachPersionVo"/>
+        where eval_id = #{evalId}
+    </select>
+        
+    <insert id="insertEvalTeachPersion" parameterType="EvalTeachPersion" useGeneratedKeys="true" keyProperty="evalId">
+        insert into eval_teach_persion
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="evalPersionName != null and evalPersionName != ''">eval_persion_name,</if>
+            <if test="academic != null and academic != ''">academic,</if>
+            <if test="schSemester != null and schSemester != ''">sch_semester,</if>
+            <if test="evalObjective != null and evalObjective != ''">eval_objective,</if>
+            <if test="evalSubjective != null and evalSubjective != ''">eval_subjective,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="username != null and username != ''">username,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="evalPersionName != null and evalPersionName != ''">#{evalPersionName},</if>
+            <if test="academic != null and academic != ''">#{academic},</if>
+            <if test="schSemester != null and schSemester != ''">#{schSemester},</if>
+            <if test="evalObjective != null and evalObjective != ''">#{evalObjective},</if>
+            <if test="evalSubjective != null and evalSubjective != ''">#{evalSubjective},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="username != null and username != ''">#{username},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEvalTeachPersion" parameterType="EvalTeachPersion">
+        update eval_teach_persion
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="evalPersionName != null and evalPersionName != ''">eval_persion_name = #{evalPersionName},</if>
+            <if test="academic != null and academic != ''">academic = #{academic},</if>
+            <if test="schSemester != null and schSemester != ''">sch_semester = #{schSemester},</if>
+            <if test="evalObjective != null and evalObjective != ''">eval_objective = #{evalObjective},</if>
+            <if test="evalSubjective != null and evalSubjective != ''">eval_subjective = #{evalSubjective},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="username != null and username != ''">username = #{username},</if>
+        </trim>
+        where eval_id = #{evalId}
+    </update>
+
+    <delete id="deleteEvalTeachPersionByEvalId" parameterType="Long">
+        delete from eval_teach_persion where eval_id = #{evalId}
+    </delete>
+
+    <delete id="deleteEvalTeachPersionByEvalIds" parameterType="String">
+        delete from eval_teach_persion where eval_id in 
+        <foreach item="evalId" collection="array" open="(" separator="," close=")">
+            #{evalId}
+        </foreach>
+    </delete>
+</mapper>

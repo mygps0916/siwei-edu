@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.renhuas.evalanalyze.mapper.AnalyzeTeachEvalMapper">
+    
+    <resultMap type="AnalyzeTeachEval" id="AnalyzeTeachEvalResult">
+        <result property="analyzeId"    column="analyze_id"    />
+        <result property="teachName"    column="teach_name"    />
+        <result property="teachId"    column="teach_id"    />
+        <result property="cartId"    column="cart_id"    />
+        <result property="schName"    column="sch_name"    />
+        <result property="schId"    column="sch_id"    />
+        <result property="schYear"    column="sch_year"    />
+        <result property="academic"    column="academic"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="evalScore"    column="eval_score"    />
+        <result property="ranking"    column="ranking"    />
+    </resultMap>
+
+    <sql id="selectAnalyzeTeachEvalVo">
+        select analyze_id, teach_name, teach_id, cart_id, sch_name, sch_id, sch_year, academic, create_time, eval_score, ranking from analyze_teach_eval
+    </sql>
+
+    <select id="selectAnalyzeTeachEvalList" parameterType="AnalyzeTeachEval" resultMap="AnalyzeTeachEvalResult">
+        <include refid="selectAnalyzeTeachEvalVo"/>
+        <where>  
+            <if test="teachName != null  and teachName != ''"> and teach_name like concat('%', #{teachName}, '%')</if>
+            <if test="cartId != null  and cartId != ''"> and cart_id = #{cartId}</if>
+            <if test="schName != null  and schName != ''"> and sch_name like concat('%', #{schName}, '%')</if>
+            <if test="schYear != null  and schYear != ''"> and sch_year = #{schYear}</if>
+            <if test="academic != null  and academic != ''"> and academic = #{academic}</if>
+            <if test="evalScore != null  and evalScore != ''"> and eval_score = #{evalScore}</if>
+            <if test="ranking != null  and ranking != ''"> and ranking = #{ranking}</if>
+        </where>
+    </select>
+    
+    <select id="selectAnalyzeTeachEvalByAnalyzeId" parameterType="Long" resultMap="AnalyzeTeachEvalResult">
+        <include refid="selectAnalyzeTeachEvalVo"/>
+        where analyze_id = #{analyzeId}
+    </select>
+        
+    <insert id="insertAnalyzeTeachEval" parameterType="AnalyzeTeachEval" useGeneratedKeys="true" keyProperty="analyzeId">
+        insert into analyze_teach_eval
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="teachName != null and teachName != ''">teach_name,</if>
+            <if test="teachId != null">teach_id,</if>
+            <if test="cartId != null and cartId != ''">cart_id,</if>
+            <if test="schName != null and schName != ''">sch_name,</if>
+            <if test="schId != null">sch_id,</if>
+            <if test="schYear != null and schYear != ''">sch_year,</if>
+            <if test="academic != null and academic != ''">academic,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="evalScore != null and evalScore != ''">eval_score,</if>
+            <if test="ranking != null and ranking != ''">ranking,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="teachName != null and teachName != ''">#{teachName},</if>
+            <if test="teachId != null">#{teachId},</if>
+            <if test="cartId != null and cartId != ''">#{cartId},</if>
+            <if test="schName != null and schName != ''">#{schName},</if>
+            <if test="schId != null">#{schId},</if>
+            <if test="schYear != null and schYear != ''">#{schYear},</if>
+            <if test="academic != null and academic != ''">#{academic},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="evalScore != null and evalScore != ''">#{evalScore},</if>
+            <if test="ranking != null and ranking != ''">#{ranking},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAnalyzeTeachEval" parameterType="AnalyzeTeachEval">
+        update analyze_teach_eval
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="teachName != null and teachName != ''">teach_name = #{teachName},</if>
+            <if test="teachId != null">teach_id = #{teachId},</if>
+            <if test="cartId != null and cartId != ''">cart_id = #{cartId},</if>
+            <if test="schName != null and schName != ''">sch_name = #{schName},</if>
+            <if test="schId != null">sch_id = #{schId},</if>
+            <if test="schYear != null and schYear != ''">sch_year = #{schYear},</if>
+            <if test="academic != null and academic != ''">academic = #{academic},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="evalScore != null and evalScore != ''">eval_score = #{evalScore},</if>
+            <if test="ranking != null and ranking != ''">ranking = #{ranking},</if>
+        </trim>
+        where analyze_id = #{analyzeId}
+    </update>
+
+    <delete id="deleteAnalyzeTeachEvalByAnalyzeId" parameterType="Long">
+        delete from analyze_teach_eval where analyze_id = #{analyzeId}
+    </delete>
+
+    <delete id="deleteAnalyzeTeachEvalByAnalyzeIds" parameterType="String">
+        delete from analyze_teach_eval where analyze_id in 
+        <foreach item="analyzeId" collection="array" open="(" separator="," close=")">
+            #{analyzeId}
+        </foreach>
+    </delete>
+</mapper>

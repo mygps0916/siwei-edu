@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.renhuas.basicdata.mapper.BasicdataCourseMapper">
+    
+    <resultMap type="BasicdataCourse" id="BasicdataCourseResult">
+        <result property="courseId"    column="course_id"    />
+        <result property="course"    column="course"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectBasicdataCourseVo">
+        select course_id, course, remark from basicdata_course
+    </sql>
+
+    <select id="selectBasicdataCourseList" parameterType="BasicdataCourse" resultMap="BasicdataCourseResult">
+        <include refid="selectBasicdataCourseVo"/>
+        <where>  
+            <if test="course != null  and course != ''"> and course = #{course}</if>
+        </where>
+    </select>
+    
+    <select id="selectBasicdataCourseByCourseId" parameterType="Long" resultMap="BasicdataCourseResult">
+        <include refid="selectBasicdataCourseVo"/>
+        where course_id = #{courseId}
+    </select>
+        
+    <insert id="insertBasicdataCourse" parameterType="BasicdataCourse" useGeneratedKeys="true" keyProperty="courseId">
+        insert into basicdata_course
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="course != null and course != ''">course,</if>
+            <if test="remark != null and remark != ''">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="course != null and course != ''">#{course},</if>
+            <if test="remark != null and remark != ''">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBasicdataCourse" parameterType="BasicdataCourse">
+        update basicdata_course
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="course != null and course != ''">course = #{course},</if>
+            <if test="remark != null and remark != ''">remark = #{remark},</if>
+        </trim>
+        where course_id = #{courseId}
+    </update>
+
+    <delete id="deleteBasicdataCourseByCourseId" parameterType="Long">
+        delete from basicdata_course where course_id = #{courseId}
+    </delete>
+
+    <delete id="deleteBasicdataCourseByCourseIds" parameterType="String">
+        delete from basicdata_course where course_id in 
+        <foreach item="courseId" collection="array" open="(" separator="," close=")">
+            #{courseId}
+        </foreach>
+    </delete>
+</mapper>

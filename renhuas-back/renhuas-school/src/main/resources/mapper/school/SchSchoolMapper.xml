@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.renhuas.school.mapper.SchSchoolMapper">
+    
+    <resultMap type="SchSchool" id="SchSchoolResult">
+        <result property="schId"    column="sch_id"    />
+        <result property="schName"    column="sch_name"    />
+        <result property="schType"    column="sch_type"    />
+        <result property="schCode"    column="sch_code"    />
+        <result property="region"    column="region"    />
+        <result property="address"    column="address"    />
+        <result property="linkName"    column="link_name"    />
+        <result property="linkPhone"    column="link_phone"    />
+        <result property="schProfile"    column="sch_profile"    />
+    </resultMap>
+
+    <sql id="selectSchSchoolVo">
+        select sch_id, sch_name, sch_type, sch_code, region, address, link_name, link_phone, sch_profile from sch_school
+    </sql>
+
+    <select id="selectSchSchoolList" parameterType="SchSchool" resultMap="SchSchoolResult">
+        <include refid="selectSchSchoolVo"/>
+        <where>  
+            <if test="schName != null  and schName != ''"> and sch_name like concat('%', #{schName}, '%')</if>
+            <if test="schType != null  and schType != ''"> and sch_type = #{schType}</if>
+            <if test="schCode != null  and schCode != ''"> and sch_code = #{schCode}</if>
+            <if test="region != null  and region != ''"> and region = #{region}</if>
+            <if test="address != null  and address != ''"> and address = #{address}</if>
+            <if test="linkName != null  and linkName != ''"> and link_name like concat('%', #{linkName}, '%')</if>
+            <if test="linkPhone != null  and linkPhone != ''"> and link_phone = #{linkPhone}</if>
+            <if test="schProfile != null  and schProfile != ''"> and sch_profile = #{schProfile}</if>
+        </where>
+    </select>
+    
+    <select id="selectSchSchoolBySchId" parameterType="Long" resultMap="SchSchoolResult">
+        <include refid="selectSchSchoolVo"/>
+        where sch_id = #{schId}
+    </select>
+        
+    <insert id="insertSchSchool" parameterType="SchSchool" useGeneratedKeys="true" keyProperty="schId">
+        insert into sch_school
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="schName != null and schName != ''">sch_name,</if>
+            <if test="schType != null and schType != ''">sch_type,</if>
+            <if test="schCode != null and schCode != ''">sch_code,</if>
+            <if test="region != null and region != ''">region,</if>
+            <if test="address != null and address != ''">address,</if>
+            <if test="linkName != null and linkName != ''">link_name,</if>
+            <if test="linkPhone != null and linkPhone != ''">link_phone,</if>
+            <if test="schProfile != null and schProfile != ''">sch_profile,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="schName != null and schName != ''">#{schName},</if>
+            <if test="schType != null and schType != ''">#{schType},</if>
+            <if test="schCode != null and schCode != ''">#{schCode},</if>
+            <if test="region != null and region != ''">#{region},</if>
+            <if test="address != null and address != ''">#{address},</if>
+            <if test="linkName != null and linkName != ''">#{linkName},</if>
+            <if test="linkPhone != null and linkPhone != ''">#{linkPhone},</if>
+            <if test="schProfile != null and schProfile != ''">#{schProfile},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSchSchool" parameterType="SchSchool">
+        update sch_school
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="schName != null and schName != ''">sch_name = #{schName},</if>
+            <if test="schType != null and schType != ''">sch_type = #{schType},</if>
+            <if test="schCode != null and schCode != ''">sch_code = #{schCode},</if>
+            <if test="region != null and region != ''">region = #{region},</if>
+            <if test="address != null and address != ''">address = #{address},</if>
+            <if test="linkName != null and linkName != ''">link_name = #{linkName},</if>
+            <if test="linkPhone != null and linkPhone != ''">link_phone = #{linkPhone},</if>
+            <if test="schProfile != null and schProfile != ''">sch_profile = #{schProfile},</if>
+        </trim>
+        where sch_id = #{schId}
+    </update>
+
+    <delete id="deleteSchSchoolBySchId" parameterType="Long">
+        delete from sch_school where sch_id = #{schId}
+    </delete>
+
+    <delete id="deleteSchSchoolBySchIds" parameterType="String">
+        delete from sch_school where sch_id in 
+        <foreach item="schId" collection="array" open="(" separator="," close=")">
+            #{schId}
+        </foreach>
+    </delete>
+</mapper>

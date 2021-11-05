@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.renhuas.basicdata.mapper.BasicdataSchYearMapper">
+    
+    <resultMap type="BasicdataSchYear" id="BasicdataSchYearResult">
+        <result property="schYearId"    column="sch_year_id"    />
+        <result property="schYear"    column="sch_year"    />
+        <result property="startTime"    column="start_time"    />
+        <result property="endTime"    column="end_time"    />
+        <result property="studyWeek"    column="study_week"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectBasicdataSchYearVo">
+        select sch_year_id, sch_year, start_time, end_time, study_week, remark from basicdata_sch_year
+    </sql>
+
+    <select id="selectBasicdataSchYearList" parameterType="BasicdataSchYear" resultMap="BasicdataSchYearResult">
+        <include refid="selectBasicdataSchYearVo"/>
+        <where>  
+            <if test="schYear != null  and schYear != ''"> and sch_year = #{schYear}</if>
+            <if test="startTime != null  and startTime != ''"> and start_time = #{startTime}</if>
+            <if test="endTime != null  and endTime != ''"> and end_time = #{endTime}</if>
+            <if test="studyWeek != null  and studyWeek != ''"> and study_week = #{studyWeek}</if>
+        </where>
+    </select>
+    
+    <select id="selectBasicdataSchYearBySchYearId" parameterType="Long" resultMap="BasicdataSchYearResult">
+        <include refid="selectBasicdataSchYearVo"/>
+        where sch_year_id = #{schYearId}
+    </select>
+        
+    <insert id="insertBasicdataSchYear" parameterType="BasicdataSchYear" useGeneratedKeys="true" keyProperty="schYearId">
+        insert into basicdata_sch_year
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="schYear != null and schYear != ''">sch_year,</if>
+            <if test="startTime != null and startTime != ''">start_time,</if>
+            <if test="endTime != null and endTime != ''">end_time,</if>
+            <if test="studyWeek != null and studyWeek != ''">study_week,</if>
+            <if test="remark != null and remark != ''">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="schYear != null and schYear != ''">#{schYear},</if>
+            <if test="startTime != null and startTime != ''">#{startTime},</if>
+            <if test="endTime != null and endTime != ''">#{endTime},</if>
+            <if test="studyWeek != null and studyWeek != ''">#{studyWeek},</if>
+            <if test="remark != null and remark != ''">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBasicdataSchYear" parameterType="BasicdataSchYear">
+        update basicdata_sch_year
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="schYear != null and schYear != ''">sch_year = #{schYear},</if>
+            <if test="startTime != null and startTime != ''">start_time = #{startTime},</if>
+            <if test="endTime != null and endTime != ''">end_time = #{endTime},</if>
+            <if test="studyWeek != null and studyWeek != ''">study_week = #{studyWeek},</if>
+            <if test="remark != null and remark != ''">remark = #{remark},</if>
+        </trim>
+        where sch_year_id = #{schYearId}
+    </update>
+
+    <delete id="deleteBasicdataSchYearBySchYearId" parameterType="Long">
+        delete from basicdata_sch_year where sch_year_id = #{schYearId}
+    </delete>
+
+    <delete id="deleteBasicdataSchYearBySchYearIds" parameterType="String">
+        delete from basicdata_sch_year where sch_year_id in 
+        <foreach item="schYearId" collection="array" open="(" separator="," close=")">
+            #{schYearId}
+        </foreach>
+    </delete>
+</mapper>

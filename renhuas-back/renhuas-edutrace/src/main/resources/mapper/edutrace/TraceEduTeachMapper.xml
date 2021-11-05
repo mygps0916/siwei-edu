@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.renhuas.edutrace.mapper.TraceEduTeachMapper">
+    
+    <resultMap type="TraceEduTeach" id="TraceEduTeachResult">
+        <result property="traceId"    column="trace_id"    />
+        <result property="traceName"    column="trace_name"    />
+        <result property="academic"    column="academic"    />
+        <result property="schSemester"    column="sch_semester"    />
+        <result property="objEval"    column="obj_eval"    />
+        <result property="subjEval"    column="subj_eval"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="username"    column="username"    />
+        <result property="userId"    column="user_id"    />
+    </resultMap>
+
+    <sql id="selectTraceEduTeachVo">
+        select trace_id, trace_name, academic, sch_semester, obj_eval, subj_eval, create_time, username, user_id from trace_edu_teach
+    </sql>
+
+    <select id="selectTraceEduTeachList" parameterType="TraceEduTeach" resultMap="TraceEduTeachResult">
+        <include refid="selectTraceEduTeachVo"/>
+        <where>  
+            <if test="traceName != null  and traceName != ''"> and trace_name like concat('%', #{traceName}, '%')</if>
+            <if test="academic != null  and academic != ''"> and academic = #{academic}</if>
+            <if test="schSemester != null  and schSemester != ''"> and sch_semester = #{schSemester}</if>
+            <if test="objEval != null  and objEval != ''"> and obj_eval = #{objEval}</if>
+            <if test="subjEval != null  and subjEval != ''"> and subj_eval = #{subjEval}</if>
+            <if test="createTime != null "> and create_time = #{createTime}</if>
+            <if test="username != null  and username != ''"> and username like concat('%', #{username}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectTraceEduTeachByTraceId" parameterType="Long" resultMap="TraceEduTeachResult">
+        <include refid="selectTraceEduTeachVo"/>
+        where trace_id = #{traceId}
+    </select>
+        
+    <insert id="insertTraceEduTeach" parameterType="TraceEduTeach" useGeneratedKeys="true" keyProperty="traceId">
+        insert into trace_edu_teach
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="traceName != null and traceName != ''">trace_name,</if>
+            <if test="academic != null and academic != ''">academic,</if>
+            <if test="schSemester != null and schSemester != ''">sch_semester,</if>
+            <if test="objEval != null and objEval != ''">obj_eval,</if>
+            <if test="subjEval != null and subjEval != ''">subj_eval,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="username != null and username != ''">username,</if>
+            <if test="userId != null">user_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="traceName != null and traceName != ''">#{traceName},</if>
+            <if test="academic != null and academic != ''">#{academic},</if>
+            <if test="schSemester != null and schSemester != ''">#{schSemester},</if>
+            <if test="objEval != null and objEval != ''">#{objEval},</if>
+            <if test="subjEval != null and subjEval != ''">#{subjEval},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="username != null and username != ''">#{username},</if>
+            <if test="userId != null">#{userId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTraceEduTeach" parameterType="TraceEduTeach">
+        update trace_edu_teach
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="traceName != null and traceName != ''">trace_name = #{traceName},</if>
+            <if test="academic != null and academic != ''">academic = #{academic},</if>
+            <if test="schSemester != null and schSemester != ''">sch_semester = #{schSemester},</if>
+            <if test="objEval != null and objEval != ''">obj_eval = #{objEval},</if>
+            <if test="subjEval != null and subjEval != ''">subj_eval = #{subjEval},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="username != null and username != ''">username = #{username},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+        </trim>
+        where trace_id = #{traceId}
+    </update>
+
+    <delete id="deleteTraceEduTeachByTraceId" parameterType="Long">
+        delete from trace_edu_teach where trace_id = #{traceId}
+    </delete>
+
+    <delete id="deleteTraceEduTeachByTraceIds" parameterType="String">
+        delete from trace_edu_teach where trace_id in 
+        <foreach item="traceId" collection="array" open="(" separator="," close=")">
+            #{traceId}
+        </foreach>
+    </delete>
+</mapper>

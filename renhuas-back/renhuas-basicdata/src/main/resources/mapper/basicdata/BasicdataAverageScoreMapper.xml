@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.renhuas.basicdata.mapper.BasicdataAverageScoreMapper">
+    
+    <resultMap type="BasicdataAverageScore" id="BasicdataAverageScoreResult">
+        <result property="averageScoreId"    column="average_score_id"    />
+        <result property="course"    column="course"    />
+        <result property="courseId"    column="course_id"    />
+        <result property="averageScore"    column="average_score"    />
+        <result property="averType"    column="aver_type"    />
+        <result property="academic"    column="academic"    />
+        <result property="schYear"    column="sch_year"    />
+        <result property="schYearId"    column="sch_year_id"    />
+        <result property="semester"    column="semester"    />
+        <result property="semesterId"    column="semester_id"    />
+        <result property="grade"    column="grade"    />
+        <result property="gradeId"    column="grade_id"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectBasicdataAverageScoreVo">
+        select average_score_id, course, course_id, average_score, aver_type, academic, sch_year, sch_year_id, semester, semester_id, grade, grade_id, remark from basicdata_average_score
+    </sql>
+
+    <select id="selectBasicdataAverageScoreList" parameterType="BasicdataAverageScore" resultMap="BasicdataAverageScoreResult">
+        <include refid="selectBasicdataAverageScoreVo"/>
+        <where>  
+            <if test="course != null  and course != ''"> and course = #{course}</if>
+            <if test="averageScore != null  and averageScore != ''"> and average_score = #{averageScore}</if>
+            <if test="averType != null  and averType != ''"> and aver_type = #{averType}</if>
+            <if test="academic != null  and academic != ''"> and academic = #{academic}</if>
+            <if test="schYear != null  and schYear != ''"> and sch_year = #{schYear}</if>
+            <if test="semester != null  and semester != ''"> and semester = #{semester}</if>
+            <if test="grade != null  and grade != ''"> and grade = #{grade}</if>
+            <if test="gradeId != null "> and grade_id = #{gradeId}</if>
+        </where>
+    </select>
+    
+    <select id="selectBasicdataAverageScoreByAverageScoreId" parameterType="Long" resultMap="BasicdataAverageScoreResult">
+        <include refid="selectBasicdataAverageScoreVo"/>
+        where average_score_id = #{averageScoreId}
+    </select>
+        
+    <insert id="insertBasicdataAverageScore" parameterType="BasicdataAverageScore" useGeneratedKeys="true" keyProperty="averageScoreId">
+        insert into basicdata_average_score
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="course != null and course != ''">course,</if>
+            <if test="courseId != null">course_id,</if>
+            <if test="averageScore != null and averageScore != ''">average_score,</if>
+            <if test="averType != null and averType != ''">aver_type,</if>
+            <if test="academic != null and academic != ''">academic,</if>
+            <if test="schYear != null and schYear != ''">sch_year,</if>
+            <if test="schYearId != null">sch_year_id,</if>
+            <if test="semester != null and semester != ''">semester,</if>
+            <if test="semesterId != null">semester_id,</if>
+            <if test="grade != null and grade != ''">grade,</if>
+            <if test="gradeId != null">grade_id,</if>
+            <if test="remark != null and remark != ''">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="course != null and course != ''">#{course},</if>
+            <if test="courseId != null">#{courseId},</if>
+            <if test="averageScore != null and averageScore != ''">#{averageScore},</if>
+            <if test="averType != null and averType != ''">#{averType},</if>
+            <if test="academic != null and academic != ''">#{academic},</if>
+            <if test="schYear != null and schYear != ''">#{schYear},</if>
+            <if test="schYearId != null">#{schYearId},</if>
+            <if test="semester != null and semester != ''">#{semester},</if>
+            <if test="semesterId != null">#{semesterId},</if>
+            <if test="grade != null and grade != ''">#{grade},</if>
+            <if test="gradeId != null">#{gradeId},</if>
+            <if test="remark != null and remark != ''">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBasicdataAverageScore" parameterType="BasicdataAverageScore">
+        update basicdata_average_score
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="course != null and course != ''">course = #{course},</if>
+            <if test="courseId != null">course_id = #{courseId},</if>
+            <if test="averageScore != null and averageScore != ''">average_score = #{averageScore},</if>
+            <if test="averType != null and averType != ''">aver_type = #{averType},</if>
+            <if test="academic != null and academic != ''">academic = #{academic},</if>
+            <if test="schYear != null and schYear != ''">sch_year = #{schYear},</if>
+            <if test="schYearId != null">sch_year_id = #{schYearId},</if>
+            <if test="semester != null and semester != ''">semester = #{semester},</if>
+            <if test="semesterId != null">semester_id = #{semesterId},</if>
+            <if test="grade != null and grade != ''">grade = #{grade},</if>
+            <if test="gradeId != null">grade_id = #{gradeId},</if>
+            <if test="remark != null and remark != ''">remark = #{remark},</if>
+        </trim>
+        where average_score_id = #{averageScoreId}
+    </update>
+
+    <delete id="deleteBasicdataAverageScoreByAverageScoreId" parameterType="Long">
+        delete from basicdata_average_score where average_score_id = #{averageScoreId}
+    </delete>
+
+    <delete id="deleteBasicdataAverageScoreByAverageScoreIds" parameterType="String">
+        delete from basicdata_average_score where average_score_id in 
+        <foreach item="averageScoreId" collection="array" open="(" separator="," close=")">
+            #{averageScoreId}
+        </foreach>
+    </delete>
+</mapper>

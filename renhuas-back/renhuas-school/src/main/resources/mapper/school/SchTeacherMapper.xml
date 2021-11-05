@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.renhuas.school.mapper.SchTeacherMapper">
+    
+    <resultMap type="SchTeacher" id="SchTeacherResult">
+        <result property="teachId"    column="teach_id"    />
+        <result property="teachName"    column="teach_name"    />
+        <result property="teachSex"    column="teach_sex"    />
+        <result property="birthDate"    column="birth_date"    />
+        <result property="cartId"    column="cart_id"    />
+        <result property="jobTitle"    column="job_title"    />
+        <result property="schName"    column="sch_name"    />
+        <result property="schId"    column="sch_id"    />
+        <result property="schType"    column="sch_type"    />
+        <result property="course"    column="course"    />
+        <result property="telephone"    column="telephone"    />
+    </resultMap>
+
+    <sql id="selectSchTeacherVo">
+        select teach_id, teach_name, teach_sex, birth_date, cart_id, job_title, sch_name, sch_id, sch_type, course, telephone from sch_teacher
+    </sql>
+
+    <select id="selectSchTeacherList" parameterType="SchTeacher" resultMap="SchTeacherResult">
+        <include refid="selectSchTeacherVo"/>
+        <where>  
+            <if test="teachName != null  and teachName != ''"> and teach_name like concat('%', #{teachName}, '%')</if>
+            <if test="teachSex != null  and teachSex != ''"> and teach_sex = #{teachSex}</if>
+            <if test="birthDate != null  and birthDate != ''"> and birth_date = #{birthDate}</if>
+            <if test="cartId != null  and cartId != ''"> and cart_id = #{cartId}</if>
+            <if test="jobTitle != null  and jobTitle != ''"> and job_title = #{jobTitle}</if>
+            <if test="schName != null  and schName != ''"> and sch_name like concat('%', #{schName}, '%')</if>
+            <if test="schType != null  and schType != ''"> and sch_type = #{schType}</if>
+            <if test="course != null  and course != ''"> and course = #{course}</if>
+            <if test="telephone != null  and telephone != ''"> and telephone = #{telephone}</if>
+        </where>
+    </select>
+    
+    <select id="selectSchTeacherByTeachId" parameterType="Long" resultMap="SchTeacherResult">
+        <include refid="selectSchTeacherVo"/>
+        where teach_id = #{teachId}
+    </select>
+        
+    <insert id="insertSchTeacher" parameterType="SchTeacher" useGeneratedKeys="true" keyProperty="teachId">
+        insert into sch_teacher
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="teachName != null and teachName != ''">teach_name,</if>
+            <if test="teachSex != null and teachSex != ''">teach_sex,</if>
+            <if test="birthDate != null and birthDate != ''">birth_date,</if>
+            <if test="cartId != null and cartId != ''">cart_id,</if>
+            <if test="jobTitle != null and jobTitle != ''">job_title,</if>
+            <if test="schName != null and schName != ''">sch_name,</if>
+            <if test="schId != null">sch_id,</if>
+            <if test="schType != null and schType != ''">sch_type,</if>
+            <if test="course != null and course != ''">course,</if>
+            <if test="telephone != null and telephone != ''">telephone,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="teachName != null and teachName != ''">#{teachName},</if>
+            <if test="teachSex != null and teachSex != ''">#{teachSex},</if>
+            <if test="birthDate != null and birthDate != ''">#{birthDate},</if>
+            <if test="cartId != null and cartId != ''">#{cartId},</if>
+            <if test="jobTitle != null and jobTitle != ''">#{jobTitle},</if>
+            <if test="schName != null and schName != ''">#{schName},</if>
+            <if test="schId != null">#{schId},</if>
+            <if test="schType != null and schType != ''">#{schType},</if>
+            <if test="course != null and course != ''">#{course},</if>
+            <if test="telephone != null and telephone != ''">#{telephone},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSchTeacher" parameterType="SchTeacher">
+        update sch_teacher
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="teachName != null and teachName != ''">teach_name = #{teachName},</if>
+            <if test="teachSex != null and teachSex != ''">teach_sex = #{teachSex},</if>
+            <if test="birthDate != null and birthDate != ''">birth_date = #{birthDate},</if>
+            <if test="cartId != null and cartId != ''">cart_id = #{cartId},</if>
+            <if test="jobTitle != null and jobTitle != ''">job_title = #{jobTitle},</if>
+            <if test="schName != null and schName != ''">sch_name = #{schName},</if>
+            <if test="schId != null">sch_id = #{schId},</if>
+            <if test="schType != null and schType != ''">sch_type = #{schType},</if>
+            <if test="course != null and course != ''">course = #{course},</if>
+            <if test="telephone != null and telephone != ''">telephone = #{telephone},</if>
+        </trim>
+        where teach_id = #{teachId}
+    </update>
+
+    <delete id="deleteSchTeacherByTeachId" parameterType="Long">
+        delete from sch_teacher where teach_id = #{teachId}
+    </delete>
+
+    <delete id="deleteSchTeacherByTeachIds" parameterType="String">
+        delete from sch_teacher where teach_id in 
+        <foreach item="teachId" collection="array" open="(" separator="," close=")">
+            #{teachId}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.renhuas.edutrace.mapper.TraceEduSchMapper">
+    
+    <resultMap type="TraceEduSch" id="TraceEduSchResult">
+        <result property="traceId"    column="trace_id"    />
+        <result property="traceName"    column="trace_name"    />
+        <result property="schName"    column="sch_name"    />
+        <result property="schId"    column="sch_id"    />
+        <result property="grade"    column="grade"    />
+        <result property="countTime"    column="count_time"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="username"    column="username"    />
+        <result property="userId"    column="user_id"    />
+    </resultMap>
+
+    <sql id="selectTraceEduSchVo">
+        select trace_id, trace_name, sch_name, sch_id, grade, count_time, create_time, username, user_id from trace_edu_sch
+    </sql>
+
+    <select id="selectTraceEduSchList" parameterType="TraceEduSch" resultMap="TraceEduSchResult">
+        <include refid="selectTraceEduSchVo"/>
+        <where>  
+            <if test="traceName != null  and traceName != ''"> and trace_name like concat('%', #{traceName}, '%')</if>
+            <if test="schName != null  and schName != ''"> and sch_name like concat('%', #{schName}, '%')</if>
+            <if test="grade != null  and grade != ''"> and grade = #{grade}</if>
+            <if test="countTime != null  and countTime != ''"> and count_time = #{countTime}</if>
+            <if test="createTime != null "> and create_time = #{createTime}</if>
+            <if test="username != null  and username != ''"> and username like concat('%', #{username}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectTraceEduSchByTraceId" parameterType="Long" resultMap="TraceEduSchResult">
+        <include refid="selectTraceEduSchVo"/>
+        where trace_id = #{traceId}
+    </select>
+        
+    <insert id="insertTraceEduSch" parameterType="TraceEduSch" useGeneratedKeys="true" keyProperty="traceId">
+        insert into trace_edu_sch
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="traceName != null and traceName != ''">trace_name,</if>
+            <if test="schName != null and schName != ''">sch_name,</if>
+            <if test="schId != null">sch_id,</if>
+            <if test="grade != null and grade != ''">grade,</if>
+            <if test="countTime != null and countTime != ''">count_time,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="username != null and username != ''">username,</if>
+            <if test="userId != null">user_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="traceName != null and traceName != ''">#{traceName},</if>
+            <if test="schName != null and schName != ''">#{schName},</if>
+            <if test="schId != null">#{schId},</if>
+            <if test="grade != null and grade != ''">#{grade},</if>
+            <if test="countTime != null and countTime != ''">#{countTime},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="username != null and username != ''">#{username},</if>
+            <if test="userId != null">#{userId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTraceEduSch" parameterType="TraceEduSch">
+        update trace_edu_sch
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="traceName != null and traceName != ''">trace_name = #{traceName},</if>
+            <if test="schName != null and schName != ''">sch_name = #{schName},</if>
+            <if test="schId != null">sch_id = #{schId},</if>
+            <if test="grade != null and grade != ''">grade = #{grade},</if>
+            <if test="countTime != null and countTime != ''">count_time = #{countTime},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="username != null and username != ''">username = #{username},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+        </trim>
+        where trace_id = #{traceId}
+    </update>
+
+    <delete id="deleteTraceEduSchByTraceId" parameterType="Long">
+        delete from trace_edu_sch where trace_id = #{traceId}
+    </delete>
+
+    <delete id="deleteTraceEduSchByTraceIds" parameterType="String">
+        delete from trace_edu_sch where trace_id in 
+        <foreach item="traceId" collection="array" open="(" separator="," close=")">
+            #{traceId}
+        </foreach>
+    </delete>
+</mapper>

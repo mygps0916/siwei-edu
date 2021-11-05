@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.renhuas.school.mapper.SchStudentMapper">
+    
+    <resultMap type="SchStudent" id="SchStudentResult">
+        <result property="stuId"    column="stu_id"    />
+        <result property="stuName"    column="stu_name"    />
+        <result property="stuNation"    column="stu_nation"    />
+        <result property="stuSex"    column="stu_sex"    />
+        <result property="schName"    column="sch_name"    />
+        <result property="schId"    column="sch_id"    />
+        <result property="schNum"    column="sch_num"    />
+        <result property="grade"    column="grade"    />
+        <result property="classId"    column="class_id"    />
+        <result property="className"    column="class_name"    />
+        <result property="nativePlace"    column="native_place"    />
+        <result property="address"    column="address"    />
+        <result property="guardian"    column="guardian"    />
+        <result property="guardPhone"    column="guard_phone"    />
+    </resultMap>
+
+    <sql id="selectSchStudentVo">
+        select stu_id, stu_name, stu_nation, stu_sex, sch_name, sch_id, sch_num, grade, class_id, class_name, native_place, address, guardian, guard_phone from sch_student
+    </sql>
+
+    <select id="selectSchStudentList" parameterType="SchStudent" resultMap="SchStudentResult">
+        <include refid="selectSchStudentVo"/>
+        <where>  
+            <if test="stuName != null  and stuName != ''"> and stu_name like concat('%', #{stuName}, '%')</if>
+            <if test="stuNation != null  and stuNation != ''"> and stu_nation = #{stuNation}</if>
+            <if test="stuSex != null  and stuSex != ''"> and stu_sex = #{stuSex}</if>
+            <if test="schName != null  and schName != ''"> and sch_name like concat('%', #{schName}, '%')</if>
+            <if test="schNum != null  and schNum != ''"> and sch_num = #{schNum}</if>
+            <if test="grade != null  and grade != ''"> and grade = #{grade}</if>
+            <if test="className != null  and className != ''"> and class_name like concat('%', #{className}, '%')</if>
+            <if test="nativePlace != null  and nativePlace != ''"> and native_place = #{nativePlace}</if>
+            <if test="address != null  and address != ''"> and address = #{address}</if>
+            <if test="guardian != null  and guardian != ''"> and guardian = #{guardian}</if>
+            <if test="guardPhone != null  and guardPhone != ''"> and guard_phone = #{guardPhone}</if>
+        </where>
+    </select>
+    
+    <select id="selectSchStudentByStuId" parameterType="Long" resultMap="SchStudentResult">
+        <include refid="selectSchStudentVo"/>
+        where stu_id = #{stuId}
+    </select>
+        
+    <insert id="insertSchStudent" parameterType="SchStudent" useGeneratedKeys="true" keyProperty="stuId">
+        insert into sch_student
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="stuName != null and stuName != ''">stu_name,</if>
+            <if test="stuNation != null and stuNation != ''">stu_nation,</if>
+            <if test="stuSex != null and stuSex != ''">stu_sex,</if>
+            <if test="schName != null and schName != ''">sch_name,</if>
+            <if test="schId != null and schId != ''">sch_id,</if>
+            <if test="schNum != null and schNum != ''">sch_num,</if>
+            <if test="grade != null and grade != ''">grade,</if>
+            <if test="classId != null">class_id,</if>
+            <if test="className != null and className != ''">class_name,</if>
+            <if test="nativePlace != null and nativePlace != ''">native_place,</if>
+            <if test="address != null and address != ''">address,</if>
+            <if test="guardian != null and guardian != ''">guardian,</if>
+            <if test="guardPhone != null and guardPhone != ''">guard_phone,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="stuName != null and stuName != ''">#{stuName},</if>
+            <if test="stuNation != null and stuNation != ''">#{stuNation},</if>
+            <if test="stuSex != null and stuSex != ''">#{stuSex},</if>
+            <if test="schName != null and schName != ''">#{schName},</if>
+            <if test="schId != null and schId != ''">#{schId},</if>
+            <if test="schNum != null and schNum != ''">#{schNum},</if>
+            <if test="grade != null and grade != ''">#{grade},</if>
+            <if test="classId != null">#{classId},</if>
+            <if test="className != null and className != ''">#{className},</if>
+            <if test="nativePlace != null and nativePlace != ''">#{nativePlace},</if>
+            <if test="address != null and address != ''">#{address},</if>
+            <if test="guardian != null and guardian != ''">#{guardian},</if>
+            <if test="guardPhone != null and guardPhone != ''">#{guardPhone},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSchStudent" parameterType="SchStudent">
+        update sch_student
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="stuName != null and stuName != ''">stu_name = #{stuName},</if>
+            <if test="stuNation != null and stuNation != ''">stu_nation = #{stuNation},</if>
+            <if test="stuSex != null and stuSex != ''">stu_sex = #{stuSex},</if>
+            <if test="schName != null and schName != ''">sch_name = #{schName},</if>
+            <if test="schId != null and schId != ''">sch_id = #{schId},</if>
+            <if test="schNum != null and schNum != ''">sch_num = #{schNum},</if>
+            <if test="grade != null and grade != ''">grade = #{grade},</if>
+            <if test="classId != null">class_id = #{classId},</if>
+            <if test="className != null and className != ''">class_name = #{className},</if>
+            <if test="nativePlace != null and nativePlace != ''">native_place = #{nativePlace},</if>
+            <if test="address != null and address != ''">address = #{address},</if>
+            <if test="guardian != null and guardian != ''">guardian = #{guardian},</if>
+            <if test="guardPhone != null and guardPhone != ''">guard_phone = #{guardPhone},</if>
+        </trim>
+        where stu_id = #{stuId}
+    </update>
+
+    <delete id="deleteSchStudentByStuId" parameterType="Long">
+        delete from sch_student where stu_id = #{stuId}
+    </delete>
+
+    <delete id="deleteSchStudentByStuIds" parameterType="String">
+        delete from sch_student where stu_id in 
+        <foreach item="stuId" collection="array" open="(" separator="," close=")">
+            #{stuId}
+        </foreach>
+    </delete>
+</mapper>

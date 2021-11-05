@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.renhuas.evaluation.mapper.EvalTeacherMapper">
+    
+    <resultMap type="EvalTeacher" id="EvalTeacherResult">
+        <result property="evalId"    column="eval_id"    />
+        <result property="evalTeachName"    column="eval_teach_name"    />
+        <result property="academic"    column="academic"    />
+        <result property="schSemester"    column="sch_semester"    />
+        <result property="evalPlan"    column="eval_plan"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="refState"    column="ref_state"    />
+        <result property="userId"    column="user_id"    />
+        <result property="username"    column="username"    />
+    </resultMap>
+
+    <sql id="selectEvalTeacherVo">
+        select eval_id, eval_teach_name, academic, sch_semester, eval_plan, create_time, ref_state, user_id, username from eval_teacher
+    </sql>
+
+    <select id="selectEvalTeacherList" parameterType="EvalTeacher" resultMap="EvalTeacherResult">
+        <include refid="selectEvalTeacherVo"/>
+        <where>  
+            <if test="evalTeachName != null  and evalTeachName != ''"> and eval_teach_name like concat('%', #{evalTeachName}, '%')</if>
+            <if test="academic != null  and academic != ''"> and academic = #{academic}</if>
+            <if test="schSemester != null  and schSemester != ''"> and sch_semester = #{schSemester}</if>
+            <if test="evalPlan != null  and evalPlan != ''"> and eval_plan = #{evalPlan}</if>
+            <if test="createTime != null "> and create_time = #{createTime}</if>
+            <if test="refState != null  and refState != ''"> and ref_state = #{refState}</if>
+            <if test="username != null  and username != ''"> and username like concat('%', #{username}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectEvalTeacherByEvalId" parameterType="Long" resultMap="EvalTeacherResult">
+        <include refid="selectEvalTeacherVo"/>
+        where eval_id = #{evalId}
+    </select>
+        
+    <insert id="insertEvalTeacher" parameterType="EvalTeacher" useGeneratedKeys="true" keyProperty="evalId">
+        insert into eval_teacher
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="evalTeachName != null and evalTeachName != ''">eval_teach_name,</if>
+            <if test="academic != null and academic != ''">academic,</if>
+            <if test="schSemester != null and schSemester != ''">sch_semester,</if>
+            <if test="evalPlan != null and evalPlan != ''">eval_plan,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="refState != null and refState != ''">ref_state,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="username != null and username != ''">username,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="evalTeachName != null and evalTeachName != ''">#{evalTeachName},</if>
+            <if test="academic != null and academic != ''">#{academic},</if>
+            <if test="schSemester != null and schSemester != ''">#{schSemester},</if>
+            <if test="evalPlan != null and evalPlan != ''">#{evalPlan},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="refState != null and refState != ''">#{refState},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="username != null and username != ''">#{username},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEvalTeacher" parameterType="EvalTeacher">
+        update eval_teacher
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="evalTeachName != null and evalTeachName != ''">eval_teach_name = #{evalTeachName},</if>
+            <if test="academic != null and academic != ''">academic = #{academic},</if>
+            <if test="schSemester != null and schSemester != ''">sch_semester = #{schSemester},</if>
+            <if test="evalPlan != null and evalPlan != ''">eval_plan = #{evalPlan},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="refState != null and refState != ''">ref_state = #{refState},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="username != null and username != ''">username = #{username},</if>
+        </trim>
+        where eval_id = #{evalId}
+    </update>
+
+    <delete id="deleteEvalTeacherByEvalId" parameterType="Long">
+        delete from eval_teacher where eval_id = #{evalId}
+    </delete>
+
+    <delete id="deleteEvalTeacherByEvalIds" parameterType="String">
+        delete from eval_teacher where eval_id in 
+        <foreach item="evalId" collection="array" open="(" separator="," close=")">
+            #{evalId}
+        </foreach>
+    </delete>
+</mapper>

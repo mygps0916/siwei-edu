@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.renhuas.basicdata.mapper.BasicdataSchTypeMapper">
+    
+    <resultMap type="BasicdataSchType" id="BasicdataSchTypeResult">
+        <result property="schTypeId"    column="sch_type_id"    />
+        <result property="schType"    column="sch_type"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectBasicdataSchTypeVo">
+        select sch_type_id, sch_type, remark from basicdata_sch_type
+    </sql>
+
+    <select id="selectBasicdataSchTypeList" parameterType="BasicdataSchType" resultMap="BasicdataSchTypeResult">
+        <include refid="selectBasicdataSchTypeVo"/>
+        <where>  
+            <if test="schType != null  and schType != ''"> and sch_type = #{schType}</if>
+        </where>
+    </select>
+    
+    <select id="selectBasicdataSchTypeBySchTypeId" parameterType="Long" resultMap="BasicdataSchTypeResult">
+        <include refid="selectBasicdataSchTypeVo"/>
+        where sch_type_id = #{schTypeId}
+    </select>
+        
+    <insert id="insertBasicdataSchType" parameterType="BasicdataSchType" useGeneratedKeys="true" keyProperty="schTypeId">
+        insert into basicdata_sch_type
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="schType != null and schType != ''">sch_type,</if>
+            <if test="remark != null and remark != ''">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="schType != null and schType != ''">#{schType},</if>
+            <if test="remark != null and remark != ''">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBasicdataSchType" parameterType="BasicdataSchType">
+        update basicdata_sch_type
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="schType != null and schType != ''">sch_type = #{schType},</if>
+            <if test="remark != null and remark != ''">remark = #{remark},</if>
+        </trim>
+        where sch_type_id = #{schTypeId}
+    </update>
+
+    <delete id="deleteBasicdataSchTypeBySchTypeId" parameterType="Long">
+        delete from basicdata_sch_type where sch_type_id = #{schTypeId}
+    </delete>
+
+    <delete id="deleteBasicdataSchTypeBySchTypeIds" parameterType="String">
+        delete from basicdata_sch_type where sch_type_id in 
+        <foreach item="schTypeId" collection="array" open="(" separator="," close=")">
+            #{schTypeId}
+        </foreach>
+    </delete>
+</mapper>
